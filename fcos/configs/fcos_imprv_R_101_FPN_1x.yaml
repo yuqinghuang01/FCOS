@@ -1,11 +1,10 @@
-# FCOS with improvements
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-101"
   RPN_ONLY: True
   FCOS_ON: True
   BACKBONE:
-    CONV_BODY: "R-50-FPN-RETINANET"
+    CONV_BODY: "R-101-FPN-RETINANET"
   RESNETS:
     BACKBONE_OUT_CHANNELS: 256
   RETINANET:
@@ -21,8 +20,8 @@ MODEL:
     CENTER_SAMPLING_RADIUS: 1.5
     IOU_LOSS_TYPE: "giou"
 DATASETS:
-  TRAIN: ("voc_2012_train_cocostyle",)
-  TEST: ("voc_2012_val_cocostyle",)
+  TRAIN: ("coco_2014_train", "coco_2014_valminusminival")
+  TEST: ("coco_2014_minival",)
 INPUT:
   MIN_SIZE_TRAIN: (800,)
   MAX_SIZE_TRAIN: 1333
@@ -35,5 +34,5 @@ SOLVER:
   WEIGHT_DECAY: 0.0001
   STEPS: (60000, 80000)
   MAX_ITER: 90000
-  IMS_PER_BATCH: 8
+  IMS_PER_BATCH: 16
   WARMUP_METHOD: "constant"

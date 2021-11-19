@@ -1,13 +1,15 @@
-# FCOS with improvements
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
+  WEIGHT: "https://cloudstor.aarnet.edu.au/plus/s/k3ys35075jmU1RP/download#X-101-64x4d.pkl"
   RPN_ONLY: True
   FCOS_ON: True
   BACKBONE:
-    CONV_BODY: "R-50-FPN-RETINANET"
+    CONV_BODY: "R-101-FPN-RETINANET"
   RESNETS:
+    STRIDE_IN_1X1: False
     BACKBONE_OUT_CHANNELS: 256
+    NUM_GROUPS: 64
+    WIDTH_PER_GROUP: 4
   RETINANET:
     USE_C5: False # FCOS uses P5 instead of C5
   FCOS:
@@ -21,10 +23,10 @@ MODEL:
     CENTER_SAMPLING_RADIUS: 1.5
     IOU_LOSS_TYPE: "giou"
 DATASETS:
-  TRAIN: ("voc_2012_train_cocostyle",)
-  TEST: ("voc_2012_val_cocostyle",)
+  TRAIN: ("coco_2014_train", "coco_2014_valminusminival")
+  TEST: ("coco_2014_minival",)
 INPUT:
-  MIN_SIZE_TRAIN: (800,)
+  MIN_SIZE_RANGE_TRAIN: (640, 800)
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 800
   MAX_SIZE_TEST: 1333
@@ -33,7 +35,7 @@ DATALOADER:
 SOLVER:
   BASE_LR: 0.01
   WEIGHT_DECAY: 0.0001
-  STEPS: (60000, 80000)
-  MAX_ITER: 90000
-  IMS_PER_BATCH: 8
+  STEPS: (120000, 160000)
+  MAX_ITER: 180000
+  IMS_PER_BATCH: 16
   WARMUP_METHOD: "constant"
